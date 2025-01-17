@@ -1,0 +1,13 @@
+
+{% include './ios/hostname.j2' %}
+
+router bgp 10
+  neighbor 1.1.1.1 remote-as 20
+  
+{% include './ios/ntp.j2' %}
+
+{% include './ios/line.j2' %}
+
+{% include './ios/snmp.j2' %}
+
+{% include './ios/user.j2' %}

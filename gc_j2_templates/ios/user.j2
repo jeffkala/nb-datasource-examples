@@ -1,0 +1,4 @@
+username admin privilege 15 password 0 cisco
+username user1 password 0 pwd1
+username {% raw %}{{ 'device-ssh-creds' | get_secret_by_secret_group_name("username") | encrypt_cisco_type7 }}{% endraw %} password 0 {% raw %}{{ 'device-ssh-creds' | get_secret_by_secret_group_name("password") | encrypt_cisco_type7 }}{% endraw %}
+{% raw %}{{ render_jeff }}{% endraw %}

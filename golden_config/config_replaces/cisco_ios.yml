@@ -1,0 +1,6 @@
+---
+- name: "username"
+  platform_network_driver: "cisco_ios"
+  description: "username"
+  regex: '(username\s+\S+\spassword\s+5\s+)\S+(\s+role\s+\S+)'
+  replace: '\1<redacted_config>\2'
