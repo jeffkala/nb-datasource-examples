@@ -1,15 +1,20 @@
 {
-    "$schema": "http://json-schema.org/draft-07/schema#",
-    "title": "NTP Server Configuration",
-    "type": "object",
-    "properties": {
-        "server": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "minItems": 3,
-          "maxItems": 3
-        }
+  "_metadata": {
+    "description": "Schema for ntp objects.",
+    "name": "Config Context schema for ntp"
+  },
+  "data_schema": {
+  "type": "object",
+  "properties": {
+    "server": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 3,
+      "maxItems": 3
     }
+  },
+  "additionalProperties": false
+  }
 }
