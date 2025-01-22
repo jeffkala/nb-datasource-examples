@@ -9,3 +9,4 @@
   config_ordered: false
   match_config: "ntp server"
   config_type: "cli"
+  config_remediation: true
