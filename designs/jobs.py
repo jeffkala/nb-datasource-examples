@@ -1,4 +1,4 @@
 from .ipam_site_design.jobs import IpamSiteDesign
-from .new_device_registration.jobs import NewDeviceRegistrationDesign
+from .pop_design.jobs import PopDesign
 
-__all__ = ("IpamSiteDesign", "NewDeviceRegistrationDesign")
+__all__ = ("IpamSiteDesign", "PopDesign")
