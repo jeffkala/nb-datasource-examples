@@ -22,7 +22,7 @@ class IpamSiteDesign(DesignJob):
         design_files = [
             "designs/0001_ipam_design.yaml.j2",
             "designs/0002_ipam_design.yaml.j2",
-            "designs/0003_ipam_design.yaml.j2",
+            # "designs/0003_ipam_design.yaml.j2",
         ]
         context_class = IpamSiteDesignContext
         nautobot_version = ">=2"
