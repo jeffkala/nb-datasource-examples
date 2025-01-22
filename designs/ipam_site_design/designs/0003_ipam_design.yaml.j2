@@ -5,7 +5,6 @@ prefixes:
   - "!next_prefix":
       locations__name__in:
         - "{{ site_name.parent }}"
-        - "{{ site_name.parent.parent }}"
       length: "{{ ipam_templates[site_size | lower]['vrf_subnets'][vrf_abbrev]['size_of_prefixes'] }}"
       vrfs__name: "{{ vrf_name }}"
     status__name: "Active"
