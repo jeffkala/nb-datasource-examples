@@ -4,10 +4,7 @@ import nautobot.core.forms as utilities_forms
 from nautobot.dcim.models import Location
 from nautobot.extras.jobs import ChoiceVar, IntegerVar, ObjectVar, StringVar
 from nautobot.ipam.models import Prefix
-from nautobot_design_builder.contrib.ext import (
-    ChildPrefixExtension,
-    NextPrefixExtension,
-)
+from nautobot_design_builder.contrib.ext import ChildPrefixExtension, NextPrefixExtension
 from nautobot_design_builder.design_job import DesignJob
 
 from .choices import SiteSizeChoice
@@ -36,7 +33,7 @@ class IpamSiteDesign(DesignJob):
         model=Location,
         label="Site",
         query_params={
-            "location_type": "Site",
+            "location_type": "Sites",
         },
         description="Location to reserve prefixes for. If location doesn't display make sure the proper site registration process was completed.",
         required=True,
