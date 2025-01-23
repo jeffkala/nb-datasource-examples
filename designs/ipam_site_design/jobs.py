@@ -6,6 +6,7 @@ from nautobot.extras.jobs import ChoiceVar, IntegerVar, ObjectVar, StringVar
 from nautobot.ipam.models import Prefix
 from nautobot_design_builder.contrib.ext import ChildPrefixExtension, NextPrefixExtension
 from nautobot_design_builder.design_job import DesignJob
+from nautobot_design_builder.choices import DesignModeChoices
 
 from .choices import SiteSizeChoice
 from .context import IpamSiteDesignContext
@@ -28,6 +29,7 @@ class IpamSiteDesign(DesignJob):
         nautobot_version = ">=2"
         extensions = [NextPrefixExtension, ChildPrefixExtension]
         description = "IPAM"
+        design_mode = DesignModeChoices.DEPLOYMENT
 
     site_name = ObjectVar(
         model=Location,
