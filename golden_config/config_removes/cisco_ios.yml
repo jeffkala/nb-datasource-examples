@@ -1,0 +1,4 @@
+---
+- platform_slug: "cisco_ios"
+  name: "Build config"
+  regex: '^Building\s+configuration.*\n'

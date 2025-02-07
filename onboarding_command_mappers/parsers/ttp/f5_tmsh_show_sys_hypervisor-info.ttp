@@ -1,0 +1,3 @@
+Proposed Address: {{ mgmt_ip }}
+Proposed Netmask:   {{ mgmt_subnet }}
+Proposed Hostname:  {{ mgmt_hostname }}

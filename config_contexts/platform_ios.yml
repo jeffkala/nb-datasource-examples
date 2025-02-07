@@ -1,0 +1,13 @@
+---
+_metadata:  
+  name: "cisco_ios"
+  weight: 1000
+  description: "Group Definitions for device platform Cisco IOS"
+  is_active: true
+  platform:
+    - slug: "cisco_ios"
+ntp:
+  server:
+    - 0.us.pool.ntp.org
+    - 1.us.pool.ntp.org
+    - 2.us.pool.ntp.org
