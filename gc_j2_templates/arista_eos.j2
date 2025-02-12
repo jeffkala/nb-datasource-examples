@@ -1,4 +1,21 @@
+!
+no aaa root
+!
+username admin privilege 15 role network-admin secret sha512 $6$mmPawCKpH/mw0p9a$GfaMqZFuloSE31oaV9xyG42Zz.Vj5e.U5xxRXpkrqgJa9d161.q8Q8ulFGqmynyrRs7MlisKtMa3C2asAoT501
+!
+{% include './gc_j2_templates/hostname.j2' %}
 
-{% include './gc_j2_templates/eos/hostname.j2' %}
+dns domain {{ domain }}
 
-{% include './gc_j2_templates/eos/ntp.j2' %}
+!
+spanning-tree mode mstp
+
+{% include './gc_j2_templates/management.j2' %}
+
+!
+{% include './gc_j2_templates/interfaces.j2' %}
+!
+{% include './gc_j2_templates/routing.j2' %}
+
+!
+end
