@@ -1,0 +1,12 @@
+management api http-commands
+   no shutdown
+!
+management http-server
+   protocol http
+!
+management api gnmi
+   transport grpc default
+!
+management api netconf
+   transport ssh default
+!
