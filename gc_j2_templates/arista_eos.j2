@@ -5,17 +5,12 @@ username admin privilege 15 role network-admin secret sha512 $6$mmPawCKpH/mw0p9a
 !
 {% include './gc_j2_templates/hostname.j2' %}
 
-dns domain {{ domain }}
-
 !
 spanning-tree mode mstp
 
-{% include './gc_j2_templates/management.j2' %}
+{% include './gc_j2_templates/ntp.j2' %}
 
-!
-{% include './gc_j2_templates/interfaces.j2' %}
-!
-{% include './gc_j2_templates/routing.j2' %}
+{% include './gc_j2_templates/management.j2' %}
 
 !
 end
