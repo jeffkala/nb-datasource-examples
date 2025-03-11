@@ -12,7 +12,7 @@ from nornir_nautobot.plugins.tasks.dispatcher import dispatcher
 InventoryPluginRegister.register("nautobot-inventory", NautobotORMInventory)
 
 
-class DeviceOnboardingTroubleshootingJob(Job):
+class CommandExecution(Job):
     """Simple Job to Execute Show Command."""
 
     devices = MultiObjectVar(model=Device, required=False)
