@@ -154,5 +154,5 @@ class CiscoStackDesignContext(Context):
                         pass
 
         except NornirNautobotException as err:
-            print(err)
+            LOGGER.error(err)
         return full_stack_data
