@@ -34,7 +34,7 @@ class CiscoStackDesignContext(Context):
     # def get_stack_data(self):
     #     return [
     #         {
-    #             "DE-NI-F31165-RL01": {
+    #             "RL01": {
     #                 "1": {
     #                     "switch": "1",
     #                     "role": "Active",
@@ -72,7 +72,7 @@ class CiscoStackDesignContext(Context):
     #             }
     #         },
     #         {
-    #             "PASMSSWA-CK2": {
+    #             "CK2": {
     #                 "1": {
     #                     "switch": "1",
     #                     "role": "Member",
