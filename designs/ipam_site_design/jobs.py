@@ -35,7 +35,7 @@ class IpamSiteDesign(DesignJob):
         model=Location,
         label="Airport",
         query_params={
-            "location_type": "Airport",
+            "location_type": "Airports",
         },
         description="Location to reserve prefixes for. If location doesn't display make sure the proper site registration process was completed.",
         required=True,
