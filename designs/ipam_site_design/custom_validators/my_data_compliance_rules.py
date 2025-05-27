@@ -25,4 +25,3 @@ class ValidateContacts(DataComplianceRule):
         if messages:
             raise ComplianceError(messages)
 
-custom_validators = list(CustomValidatorIterator()) + [ValidateContacts]
