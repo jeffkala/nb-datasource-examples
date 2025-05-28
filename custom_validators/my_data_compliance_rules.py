@@ -7,7 +7,7 @@ class ValidateContacts(DataComplianceRule):
 
     def audit_name_first_and_last(self):
         # Your logic to determine if this function has succeeded or failed
-        if len(self.context["object"].name) <= 1:
+        if len(self.context["object"].name.split()) <= 1:
             raise ComplianceError({"Name": "Contact must be first and last."})
 
     # def audit_desired_name_two(self):
