@@ -3,15 +3,19 @@
 import logging
 
 from nautobot_design_builder.context import Context
-from nautobot_golden_config.models import GoldenConfig
-from nautobot_plugin_nornir.constants import NORNIR_SETTINGS
-from nautobot_plugin_nornir.plugins.inventory.nautobot_orm import NautobotORMInventory
-from nornir import InitNornir
-from nornir.core.plugins.inventory import InventoryPluginRegister
-from nornir_nautobot.exceptions import NornirNautobotException
-from nornir_nautobot.plugins.tasks.dispatcher import dispatcher
 
-from nautobot.dcim.models import Device, Platform
+# from nautobot_golden_config.models import GoldenConfig
+# from nautobot_plugin_nornir.constants import NORNIR_SETTINGS
+from nautobot_plugin_nornir.plugins.inventory.nautobot_orm import NautobotORMInventory
+
+# from nornir import InitNornir
+from nornir.core.plugins.inventory import InventoryPluginRegister
+
+from nautobot.dcim.models import Device  # , Platform
+
+# from nornir_nautobot.exceptions import NornirNautobotException
+# from nornir_nautobot.plugins.tasks.dispatcher import dispatcher
+
 
 InventoryPluginRegister.register("nautobot-inventory", NautobotORMInventory)
 
