@@ -404,9 +404,9 @@ class CiscoStackDesignContext(Context):
 
     def get_stack_data(self):
         """Login to device and retrieve stack information."""
-        if self.use_sample_data:
-            self.job_result.log("Using sample data, skipping logging into devices.")
-            return self._get_stack_data()
+        # if self.use_sample_data:
+        self.job_result.log("Using sample data, skipping logging into devices.")
+        return self._get_stack_data()
 
         # device_filter = {
         #     "platform__name": "cisco_xe",
