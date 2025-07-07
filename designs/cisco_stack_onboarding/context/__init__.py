@@ -40,11 +40,10 @@ class CiscoStackDesignContext(Context):
 
     def get_current_stack_master(self, stack_data):
         """Get the current stack master from the stack data."""
-        print(f"Stack Data: {stack_data}")
-        for swid, swdata in stack_data.items():
-            print(f"Switch ID: {swid}, Switch Data: {swdata}")
-            if swdata["role"] in ["Active", "Master"]:
-                return swid
+        for switch in stack_data:
+            for swid, swdata in switch.items():
+                if swdata["role"] in ["Active", "Master"]:
+                    return swid
         return None
 
     def _get_stack_data(self):
