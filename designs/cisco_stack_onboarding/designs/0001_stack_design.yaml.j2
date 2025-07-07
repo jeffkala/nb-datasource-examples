@@ -44,7 +44,7 @@ devices:
   - "!create_or_update:name": "{{ master }}"
 {% endif %}
     location__name: "{{ m_device.location.name }}"
-    status__name: "Deployed"
+    status__name: "Active"
     device_type__model: "!ref:dtype_{{ member_data['pid'] | lower }}"
     role__name: "{{ m_device.role.name }}"
     platform__name: "{{ m_device.platform.name }}"
