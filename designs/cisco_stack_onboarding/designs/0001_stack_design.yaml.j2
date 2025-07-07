@@ -15,8 +15,8 @@ virtual_chassis:
 {% for get_stack_data_instance in _stack_data %}
 {%    for vc_main_device in get_stack_data_instance %}
 - "!create_or_update:name": "{{ vc_main_device }}"
-  master__name: "get_current_stack_master(vc_main_device)"
-  "!ref": "vc_{{ master }}"
+  master__name: "get_current_stack_master(get_stack_data_instance)"
+  "!ref": "vc_{{ vc_main_device }}"
 {%    endfor %}
 {% endfor %}
 
