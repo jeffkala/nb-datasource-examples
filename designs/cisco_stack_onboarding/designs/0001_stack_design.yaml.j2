@@ -3,7 +3,6 @@
 device_types:
 {% for get_stack_data_instance in _stack_data %}
 {%    for master, members in get_stack_data_instance.items() %}
-{% set m_device = get_master_data(master) %}
 {%        for member, member_data in members.items() %}
   - "!create_or_update:model": "{{ member_data['pid'] }}"
     manufacturer__name: "Cisco"
@@ -14,22 +13,11 @@ device_types:
 
 virtual_chassis:
 {% for get_stack_data_instance in _stack_data %}
-{%    for master, members in get_stack_data_instance.items() %}
-{%        if members.keys() | list | count > 1 %}
-- "!create_or_update:name": "{{ master }}"
-{%            for member, member_data in members.items() %}
-{%                if member_data['role'] == 'Active' %}
-  master__name: "{{ master }}:{{ member }}"
-{%                elif member_data['role'] == 'Master' %}
-  master__name: "{{ master }}:{{ member }}"
-{%                else %}
-  master__name: "{{ master }}"
-{%                endif %}
-{%            endfor %}
+{%    for vc_main_device in get_stack_data_instance %}
+- "!create_or_update:name": "{{ vc_main_device }}"
+  master__name: "get_current_stack_master(vc_main_device)"
   "!ref": "vc_{{ master }}"
-  "deferred": true
-{%         endif %}
-{%     endfor %}
+{%    endfor %}
 {% endfor %}
 
 devices:
@@ -52,7 +40,9 @@ devices:
     virtual_chassis: "!ref:vc_{{ master }}"
     vc_priority: "{{ member_data['priority'] }}"
     vc_position: "{{ member }}"
+
 {%                  endif %}
 {%         endfor %}
+    "deferred": true
 {%     endfor %}
 {% endfor %}

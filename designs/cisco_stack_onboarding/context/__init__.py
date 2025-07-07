@@ -38,6 +38,13 @@ class CiscoStackDesignContext(Context):
     def get_master_data(self, hostname):
         return Device.objects.get(name=hostname)
 
+    def get_current_stack_master(self, stack_data):
+        """Get the current stack master from the stack data."""
+        for swid, swdata in stack_data.items():
+            if swdata["role"] in ["Active", "Master"]:
+                return swid
+        return None
+
     def _get_stack_data(self):
         """Static Stack Data for Testing."""
         return [
