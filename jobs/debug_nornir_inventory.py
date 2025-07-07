@@ -3,17 +3,18 @@
 from datetime import datetime
 
 import yaml
-from nautobot.apps.jobs import Job, MultiObjectVar
-from nautobot.dcim.models import Device
-from nornir import InitNornir
-from nornir.core.plugins.inventory import InventoryPluginRegister, TransformFunctionRegister
-
 from nautobot_plugin_nornir.constants import NORNIR_SETTINGS
 from nautobot_plugin_nornir.plugins.inventory.nautobot_orm import NautobotORMInventory
-from nautobot_plugin_nornir.plugins.transform.remove_creds import remove_credentials
+from nornir import InitNornir
+from nornir.core.plugins.inventory import (
+    InventoryPluginRegister,  # TransformFunctionRegister
+)
+
+from nautobot.apps.jobs import Job, MultiObjectVar
+from nautobot.dcim.models import Device
 
 InventoryPluginRegister.register("nautobot-inventory", NautobotORMInventory)
-TransformFunctionRegister.register("remove-credentials", remove_credentials)
+# TransformFunctionRegister.register("remove-credentials", remove_credentials)
 
 
 class DebugInventoryJob(Job):
@@ -48,7 +49,7 @@ class DebugInventoryJob(Job):
                         "queryset": qs,
                         "defaults": {"now": datetime.now()},
                     },
-                    "transform_function": "remove-credentials",
+                    # "transform_function": "remove-credentials",
                 },
             ) as nornir_obj:
                 after_qs = datetime.now()
@@ -57,7 +58,9 @@ class DebugInventoryJob(Job):
                     self.logger.info(
                         "#### %s\n```yaml\n%s```",
                         host,
-                        yaml.dump(nornir_obj.inventory.hosts[host], default_flow_style=False),
+                        yaml.dump(
+                            nornir_obj.inventory.hosts[host], default_flow_style=False
+                        ),
                         extra={"object": Device.objects.get(id=data.data["id"])},
                     )
                     self.logger.info(
@@ -68,7 +71,9 @@ class DebugInventoryJob(Job):
                     )
                 self.logger.info(
                     "#### Default Data\n```yaml\n%s```",
-                    yaml.dump(nornir_obj.inventory.defaults.data, default_flow_style=False),
+                    yaml.dump(
+                        nornir_obj.inventory.defaults.data, default_flow_style=False
+                    ),
                 )
         except Exception as err:
             self.logger.info("%s", err)
