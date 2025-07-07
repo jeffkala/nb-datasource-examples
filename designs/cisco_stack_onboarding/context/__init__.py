@@ -44,7 +44,7 @@ class CiscoStackDesignContext(Context):
             for swid, swdata in stack_info.items():
                 if swdata["role"] in ["Active", "Master"]:
                     return f"{main_switch}:{swid}"
-        return f"{main_switch}"
+        return ""
 
     def _get_stack_data(self):
         """Static Stack Data for Testing."""
@@ -229,7 +229,7 @@ class CiscoStackDesignContext(Context):
                     },
                     "2": {
                         "switch": "2",
-                        "role": "Active",
+                        "role": "Member",
                         "mac_address": "d4ad.bd7a.b480",
                         "priority": "5",
                         "version": "V02",
@@ -263,7 +263,7 @@ class CiscoStackDesignContext(Context):
                     },
                     "4": {
                         "switch": "4",
-                        "role": "Member",
+                        "role": "Active",
                         "mac_address": "d4ad.bd02.6e80",
                         "priority": "5",
                         "version": "V02",
