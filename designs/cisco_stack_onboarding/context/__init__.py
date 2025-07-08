@@ -43,7 +43,10 @@ class CiscoStackDesignContext(Context):
         for main_switch, stack_info in stack_data.items():
             for swid, swdata in stack_info.items():
                 if swdata["role"] in ["Active", "Master"]:
-                    return f"{main_switch}:{swid}"
+                    current_master = f"{main_switch}:{swid}"
+                    if ":1" in current_master:
+                        return main_switch
+                    return current_master
         return ""
 
     def _get_stack_data(self):
