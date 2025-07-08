@@ -31,7 +31,7 @@ virtual_chassis:
     vc_priority: "{{ member_data['priority'] }}"
     vc_position: "{{ member_num }}"
 {%            endif %}
-  - { "!get:name": "{{ vc_main_device }}", "deferred": true }
+  - "{{ vc_main_device }}"
 {%        endfor %}
 {%            endif %}
 {%    endfor %}
