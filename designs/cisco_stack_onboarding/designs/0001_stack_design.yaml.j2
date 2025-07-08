@@ -22,6 +22,9 @@ virtual_chassis:
 {%        for member_num, member_data in stack_members.items() %}
 {%            if member_num != '1' %}
   - "!create_or_update:name": "{{ vc_main_device }}:{{ member_num }}"
+{%            else %}
+  - "!create_or_update:name": "{{ vc_main_device }}"
+{%            endif %}
     serial: "{{ member_data['sn'] }}"
     location__name: "{{ m_device.location.name }}"
     status__name: "Active"
@@ -30,8 +33,6 @@ virtual_chassis:
     platform__name: "{{ m_device.platform.name }}"
     vc_priority: "{{ member_data['priority'] }}"
     vc_position: "{{ member_num }}"
-{%            endif %}
-  - "{{ vc_main_device }}"
 {%        endfor %}
 {%            endif %}
 {%    endfor %}
