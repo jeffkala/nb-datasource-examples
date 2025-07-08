@@ -4,10 +4,10 @@ devices:
 {% for get_stack_data_instance in _stack_data %}
 {%    for master, members in get_stack_data_instance.items() %}
 {%        for member, member_data in members.items() %}
-  - "!lookup:name": "{{ master }}"
-    "!update:virtual_chassis__name": "{{ master }}"
-    "!update:vc_priority": "{{ member_data['priority'] }}"
-    "!update:vc_position": "{{ member }}"
+  - "!get:name": "{{ master }}"
+    virtual_chassis__name: "{{ master }}"
+    vc_priority: "{{ member_data['priority'] }}"
+    vc_position: "{{ member }}"
 {%        endfor %}
 {%    endfor %}
 {% endfor %}
