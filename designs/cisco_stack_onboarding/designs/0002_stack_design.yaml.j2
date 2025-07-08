@@ -6,7 +6,6 @@ virtual_chassis:
 {%    for vc_main_device, stack_members in get_stack_data_instance.items() %}
 {%          if stack_members.keys() | list | count > 1 %}
 - name: "{{ vc_main_device }}"
-  "deferred": true
   master__name: "{{ get_current_stack_master(get_stack_data_instance) }}"
   master__vc_position: "100"
   master__vc_priority: "15"
