@@ -33,6 +33,12 @@ virtual_chassis:
     vc_position: "{{ member_num }}"
 {%            else %}
   - name: "{{ vc_main_device }}"
+    serial: "{{ member_data['sn'] }}"
+    location__name: "{{ m_device.location.name }}"
+    status__name: "Active"
+    device_type__model: "!ref:dtype_{{ member_data['pid'] | lower }}"
+    role__name: "{{ m_device.role.name }}"
+    platform__name: "{{ m_device.platform.name }}"
     "!create_or_update:virtual_chassis": "!ref:vc_{{ vc_main_device }}"
     "!create_or_update:vc_priority": "{{ member_data['priority'] }}"
     "!create_or_update:vc_position": "{{ member_num }}"
