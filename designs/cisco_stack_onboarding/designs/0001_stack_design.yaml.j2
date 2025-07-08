@@ -22,14 +22,8 @@ virtual_chassis:
 {%        for member_num, member_data in stack_members.items() %}
 {%            if member_num != '1' %}
   - "!create_or_update:name": "{{ vc_main_device }}:{{ member_num }}"
-    virtual_chassis: "!ref:vc_{{ vc_main_device }}"
-    vc_priority: "{{ member_data['priority'] }}"
-    vc_position: "{{ member_num }}"
 {%            else %}
-  - "!update:name": "{{ m_device.name }}"
-    virtual_chassis: "!ref:vc_{{ vc_main_device }}"
-    vc_priority: "{{ member_data['priority'] }}"
-    vc_position: "{{ member_num }}"
+  - "name": "{{ vc_main_device }}"
 {%            endif %}
     serial: "{{ member_data['sn'] }}"
     location__name: "{{ m_device.location.name }}"
@@ -37,6 +31,9 @@ virtual_chassis:
     device_type__model: "!ref:dtype_{{ member_data['pid'] | lower }}"
     role__name: "{{ m_device.role.name }}"
     platform__name: "{{ m_device.platform.name }}"
+    virtual_chassis: "!ref:vc_{{ vc_main_device }}"
+    vc_priority: "{{ member_data['priority'] }}"
+    vc_position: "{{ member_num }}"
 {%        endfor %}
 {%            endif %}
 {%    endfor %}
