@@ -98,7 +98,7 @@ class CiscoStackDesignContext(Context):
                 "HOU150C9KC_NN7": {
                     "1": {
                         "switch": "1",
-                        "role": "Member",
+                        "role": "Active",
                         "mac_address": "00bc.60a6.f800",
                         "priority": "15",
                         "version": "V01",
@@ -115,7 +115,7 @@ class CiscoStackDesignContext(Context):
                     },
                     "2": {
                         "switch": "2",
-                        "role": "Active",
+                        "role": "Member",
                         "mac_address": "00bc.60a6.f900",
                         "priority": "1",
                         "version": "V01",
