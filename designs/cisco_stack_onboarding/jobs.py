@@ -14,11 +14,11 @@ class CiscoStackDesign(DesignJob):
         name = "Onboard Cisco Stack"
         description = "Find Stacked devices and create the stack as virtual chassis."
         commit_default = False
-        # design_file = "designs/0001_stack_design.yaml.j2"
-        design_files = [
-            "designs/0001_stack_design.yaml.j2",
-            "designs/0002_stack_design.yaml.j2",
-        ]
+        design_file = "designs/0001_stack_design.yaml.j2"
+        # design_files = [
+        #     "designs/0001_stack_design.yaml.j2",
+        #     "designs/0002_stack_design.yaml.j2",
+        # ]
         context_class = CiscoStackDesignContext
         nautobot_version = ">=2"
 
