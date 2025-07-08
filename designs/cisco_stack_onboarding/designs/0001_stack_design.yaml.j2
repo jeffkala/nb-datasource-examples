@@ -23,7 +23,7 @@ virtual_chassis:
 {%            if member_num != '1' %}
   - "!create_or_update:name": "{{ vc_main_device }}:{{ member_num }}"
 {%            else %}
-  - "!get:name": "{{ vc_main_device }}"
+  - name: "{{ vc_main_device }}"
 {%            endif %}
     serial: "{{ member_data['sn'] }}"
     location__name: "{{ m_device.location.name }}"
