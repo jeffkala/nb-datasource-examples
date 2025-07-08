@@ -5,7 +5,7 @@ devices:
 {%    for master, members in get_stack_data_instance.items() %}
 {%        for member, member_data in members.items() %}
   - name: "{{ master }}"
-    "!update:virtual_chassis": "{{ master }}"
+    "!update:virtual_chassis__name": "{{ master }}"
     "!update:vc_priority": "{{ member_data['priority'] }}"
     "!update:vc_position": "{{ member }}"
 {%        endfor %}
