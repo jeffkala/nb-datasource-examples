@@ -32,7 +32,7 @@ virtual_chassis:
     vc_position: "{{ member_num }}"
 {%            endif %}
 {%        endfor %}
-  - "{{ m_device }}"
+  - "!get:name": "{{ m_device }}"
 {%            endif %}
 {%    endfor %}
 {% endfor %}
