@@ -17,7 +17,7 @@ virtual_chassis:
 {% set m_device = get_master_data(vc_main_device) %}
 - "!create_or_update:name": "{{ vc_main_device }}"
 {%                if stack_members.keys() | list | count > 1 %}
-  master__name: "{{ vc_main_device }}"
+  master__name: "{{ get_current_stack_master(get_stack_data_instance) }}"
 {%                else %}
   master__name: "{{ vc_main_device }}"
 {%                endif %}
@@ -39,5 +39,19 @@ virtual_chassis:
 {%            endif %}
 {%        endfor %}
 {%            endif %}
+{%    endfor %}
+{% endfor %}
+
+
+virtual_chassis:
+{% for get_stack_data_instance in _stack_data %}
+{%    for vc_main_device, stack_members in get_stack_data_instance.items() %}
+- "!create_or_update:name": "{{ vc_main_device }}"
+  "deferred": true
+{%                if stack_members.keys() | list | count > 1 %}
+  master__name: "{{ get_current_stack_master(get_stack_data_instance) }}"
+{%                else %}
+  master__name: "{{ vc_main_device }}"
+{%                endif %}
 {%    endfor %}
 {% endfor %}
