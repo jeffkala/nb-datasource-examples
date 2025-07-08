@@ -7,8 +7,6 @@ virtual_chassis:
 {%          if stack_members.keys() | list | count > 1 %}
 - "!update:name": "{{ vc_main_device }}"
   master__name: "{{ get_current_stack_master(get_stack_data_instance) }}"
-  master__vc_position: "100"
-  master__vc_priority: "15"
 {%          endif %}
 {%    endfor %}
 {% endfor %}
