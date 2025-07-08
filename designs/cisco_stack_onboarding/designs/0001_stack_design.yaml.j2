@@ -29,7 +29,7 @@ virtual_chassis:
     role__name: "{{ m_device.role.name }}"
     platform__name: "{{ m_device.platform.name }}"
 {%            else %}
-  - "!update": "{{ m_device }}"
+  - "!update:name": "{{ m_device }}"
 {%            endif %}
     virtual_chassis: "!ref:vc_{{ vc_main_device }}"
     vc_priority: "{{ member_data['priority'] }}"
