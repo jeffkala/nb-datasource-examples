@@ -33,7 +33,6 @@ virtual_chassis:
     vc_position: "{{ member_num }}"
 {%            else %}
   - "!update:name": "{{ vc_main_device }}"
-    serial: "{{ member_data['sn'] }}"
     location__name: "{{ m_device.location.name }}"
     status__name: "Active"
     device_type__model: "!ref:dtype_{{ member_data['pid'] | lower }}"
