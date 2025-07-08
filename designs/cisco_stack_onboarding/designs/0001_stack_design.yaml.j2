@@ -26,7 +26,7 @@ virtual_chassis:
     vc_priority: "{{ member_data['priority'] }}"
     vc_position: "{{ member_num }}"
 {%            else %}
-  - "name": "{{ m_device.name }}"
+  - "!update:name": "{{ m_device.name }}"
     virtual_chassis: "!ref:vc_{{ vc_main_device }}"
     vc_priority: "{{ member_data['priority'] }}"
     vc_position: "{{ member_num }}"
