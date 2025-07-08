@@ -28,5 +28,6 @@ virtual_chassis:
     role__name: "{{ m_device.role.name }}"
     platform__name: "{{ m_device.platform.name }}"
 {%            endif %}
+{%        endfor %}
 {%    endfor %}
 {% endfor %}
