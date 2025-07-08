@@ -1,15 +1,5 @@
 ---
 {% set _stack_data = get_stack_data() %}
-device_types:
-{% for get_stack_data_instance in _stack_data %}
-{%    for master, members in get_stack_data_instance.items() %}
-{%        for member, member_data in members.items() %}
-  - "!create_or_update:model": "{{ member_data['pid'] }}"
-    manufacturer__name: "Cisco"
-    "!ref": "dtype_{{ member_data['pid'] | lower }}"
-{%         endfor %}
-{%     endfor %}
-{% endfor %}
 
 devices:
 {% for get_stack_data_instance in _stack_data %}
@@ -24,7 +14,7 @@ devices:
 {%            endif %}
     location__name: "{{ m_device.location.name }}"
     status__name: "Active"
-    device_type__model: "!ref:dtype_{{ member_data['pid'] | lower }}"
+    device_type__model: {"!create_or_update:model": "{{ member_data['pid'] }}", manufacturer__name: "Cisco"}
     role__name: "{{ m_device.role.name }}"
     platform__name: "{{ m_device.platform.name }}"
 {%                if members.keys() | list | count > 1 %}
