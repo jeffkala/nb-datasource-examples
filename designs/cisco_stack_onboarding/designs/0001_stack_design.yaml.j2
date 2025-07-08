@@ -30,8 +30,6 @@ virtual_chassis:
     platform__name: "{{ m_device.platform.name }}"
     vc_priority: "{{ member_data['priority'] }}"
     vc_position: "{{ member_num }}"
-{%            else %}
-  - "{{ m_device }}"
 {%            endif %}
 {%        endfor %}
 {%            endif %}
