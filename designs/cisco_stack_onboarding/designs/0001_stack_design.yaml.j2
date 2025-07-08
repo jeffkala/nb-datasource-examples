@@ -18,6 +18,7 @@ virtual_chassis:
 - "!create_or_update:name": "{{ vc_main_device }}"
   master__name: "{{ get_current_stack_master(get_stack_data_instance) }}"
   "!ref": "vc_{{ vc_main_device }}"
+{%                if stack_members.keys() | list | count > 1 %}
   members:
 {%        for member_num, member_data in stack_members.items() %}
 {%            if member_num != '1' %}
@@ -28,6 +29,7 @@ virtual_chassis:
     device_type__model: "!ref:dtype_{{ member_data['pid'] | lower }}"
     role__name: "{{ m_device.role.name }}"
     platform__name: "{{ m_device.platform.name }}"
+{%            endif %}
 {%            endif %}
 {%        endfor %}
 {%    endfor %}
