@@ -33,9 +33,9 @@ virtual_chassis:
     vc_position: "{{ member_num }}"
 {%            else %}
   - name: "{{ vc_main_device }}"
-    "!update:virtual_chassis": "!ref:vc_{{ vc_main_device }}"
-    "!update:vc_priority": "{{ member_data['priority'] }}"
-    "!update:vc_position": "{{ member_num }}"
+    virtual_chassis: "!ref:vc_{{ vc_main_device }}"
+    vc_priority: "{{ member_data['priority'] }}"
+    vc_position: "{{ member_num }}"
 {%            endif %}
 {%        endfor %}
 {%            endif %}
