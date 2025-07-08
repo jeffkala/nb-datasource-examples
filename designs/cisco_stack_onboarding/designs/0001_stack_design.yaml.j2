@@ -31,7 +31,7 @@ virtual_chassis:
     vc_priority: "{{ member_data['priority'] }}"
     vc_position: "{{ member_num }}"
 {%            else %}
-  - "{{ m_device }}"
+  - "!get:name": "{{ m_device.name }}"
 {%            endif %}
 {%        endfor %}
 {%            endif %}
