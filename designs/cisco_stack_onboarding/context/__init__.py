@@ -322,7 +322,7 @@ class CiscoStackDesignContext(Context):
                 "WFCSL5E1": {
                     "1": {
                         "switch": "1",
-                        "role": "Active",
+                        "role": "Member",
                         "mac_address": "d4ad.bd29.a880",
                         "priority": "15",
                         "version": "V02",
@@ -339,7 +339,7 @@ class CiscoStackDesignContext(Context):
                     },
                     "2": {
                         "switch": "2",
-                        "role": "Member",
+                        "role": "Active",
                         "mac_address": "308b.b214.e980",
                         "priority": "5",
                         "version": "V02",
