@@ -1,5 +1,17 @@
 ---
 {% set _stack_data = get_stack_data() %}
+devices:
+{% for get_stack_data_instance in _stack_data %}
+{%    for master, members in get_stack_data_instance.items() %}
+{%        for member, member_data in members.items() %}
+- "!create_or_update:name": "{{ master }}"
+  virtual_chassis: "{{ master }}"
+  vc_priority: "{{ member_data['priority'] }}"
+  vc_position: "{{ member }}"
+{%        endfor %}
+{%    endfor %}
+{% endfor %}
+
 virtual_chassis:
 {% for get_stack_data_instance in _stack_data %}
 {%    for vc_main_device, stack_members in get_stack_data_instance.items() %}
