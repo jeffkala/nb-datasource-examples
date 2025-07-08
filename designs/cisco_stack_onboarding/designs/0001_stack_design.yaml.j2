@@ -17,7 +17,7 @@ devices:
 {% set m_device = get_master_data(master) %}
 {%        for member_num, member_data in members.items() %}
 {%            if member_num != '1' %}
-  - "!create_or_update:name": "{{ master }}:{{ member }}"
+  - "!create_or_update:name": "{{ master }}:{{ member_num }}"
     serial: "{{ member_data['sn'] }}"
 {%            else %}
   - "!create_or_update:name": "{{ master }}"
