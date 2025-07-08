@@ -27,9 +27,9 @@ virtual_chassis:
     vc_position: "{{ member_num }}"
 {%            else %}
   - "name": "{{ m_device.name }}"
-    "!update:virtual_chassis": "!ref:vc_{{ vc_main_device }}"
-    "!update:vc_priority": "{{ member_data['priority'] }}"
-    "!update:vc_position": "{{ member_num }}"
+    virtual_chassis: "!ref:vc_{{ vc_main_device }}"
+    vc_priority: "{{ member_data['priority'] }}"
+    vc_position: "{{ member_num }}"
 {%            endif %}
     serial: "{{ member_data['sn'] }}"
     location__name: "{{ m_device.location.name }}"
