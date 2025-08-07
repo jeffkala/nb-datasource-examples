@@ -33,9 +33,9 @@ class IpamSiteDesign(DesignJob):
 
     site_name = ObjectVar(
         model=Location,
-        label="Airport",
+        label="Site Name",
         query_params={
-            "location_type": "Airports",
+            "location_type": "site",
         },
         description="Location to reserve prefixes for. If location doesn't display make sure the proper site registration process was completed.",
         required=True,
@@ -51,3 +51,4 @@ class IpamSiteDesign(DesignJob):
         description="Number of LAN segments for the site. Leave 0 selected for Micro and Small Sites.",
         default=0,
     )
+
