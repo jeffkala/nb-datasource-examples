@@ -35,7 +35,7 @@ class IpamSiteDesign(DesignJob):
         model=Location,
         label="Site Name",
         query_params={
-            "location_type": "site",
+            "location_type": "City Site",
         },
         description="Location to reserve prefixes for. If location doesn't display make sure the proper site registration process was completed.",
         required=True,
@@ -51,4 +51,5 @@ class IpamSiteDesign(DesignJob):
         description="Number of LAN segments for the site. Leave 0 selected for Micro and Small Sites.",
         default=0,
     )
+
 
