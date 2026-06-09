@@ -1,6 +1,6 @@
 import re
-from nautobot_data_validation_engine.custom_validators import DataComplianceRule, ComplianceError
-
+# from nautobot_data_validation_engine.custom_validators import DataComplianceRule, ComplianceError
+from nautobot.data_validation.custom_validators import ComplianceError, DataComplianceRule
 # class ValidateContacts(DataComplianceRule):
 #     model = "extras.contact" # Ex: 'dcim.device'
 #     enforce = False # True/False enforce flag
