@@ -23,7 +23,7 @@ class ValidateContacts(DataComplianceRule):
 
 class DeviceDataComplianceRules(DataComplianceRule):
     model = "dcim.device"
-    enforce = False
+    enforce = True
     
     # Checks if a device name contains any special characters other than a dash (-), underscore (_), or period (.) using regex
     def audit_device_name_chars(self):
