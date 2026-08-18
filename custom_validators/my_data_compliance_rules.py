@@ -104,11 +104,10 @@ class InterfaceVlansMatchLocation(DataComplianceRule):
         untagged = self.context["object"].untagged_vlan  # Single vlan object
         print(untagged)
         print(type(untagged))
-        if untagged:
-            if untagged.location and device_location != untagged.location.name:
-                raise ComplianceError(
-                    {"untagged_vlan": "VLAN isn't the same as the devices location."}
-                )
+        if untagged and device_location != untagged.location.name:
+            raise ComplianceError(
+                {"untagged_vlan": "VLAN isn't the same as the devices location."}
+            )
         tagged = self.context["object"].tagged_vlans.all()  # vlan queryset
         if tagged:
             for vlan_location in tagged:
