@@ -74,12 +74,12 @@ class VlanAssignedOneLocation(DataComplianceRule):
     enforce = True
 
     def vlan_must_have_one_location(self):
-        print(dir(self.context["object"]))
-        print(self.context["object"].locations)
-        print(self.context["object"].locations.count())
+        # Odd fields on vlans 'location', 'location_assignments', 'locations'
+        print(self.context["object"].location_assignments)
+        print(self.context["object"].location_assignments.count())
         if (
-            not self.context["object"].locations
-            or self.context["object"].locations.count() != 1
+            not self.context["object"].location_assignments
+            or self.context["object"].location_assignments.count() != 1
         ):
             raise ComplianceError(
                 {"locations": "VLANs must assign one and only one location."}
