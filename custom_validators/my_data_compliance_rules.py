@@ -67,3 +67,22 @@ class SerialNotEmptyActiveStatus(DataComplianceRule):
                 messages.update(ex.message_dict)
         if messages:
             raise ComplianceError(messages)
+
+
+class VlanAssignedOneLocation(DataComplianceRule):
+    model = "ipam.vlan"
+    enforced = True
+
+    def vlan_must_have_one_location(self):
+        if not self.context["data"].locations.count() > 0:
+            raise ComplianceError({"locations": "VLANs must assign a location."})
+
+    def audit(self):
+        messages = {}
+        for fn in [self.vlan_must_have_one_location]:
+            try:
+                fn()
+            except ComplianceError as ex:
+                messages.update(ex.message_dict)
+        if messages:
+            raise ComplianceError(messages)
