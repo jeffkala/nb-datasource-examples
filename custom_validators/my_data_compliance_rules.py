@@ -95,7 +95,8 @@ class InterfaceVlansMatchLocation(DataComplianceRule):
     enforce = True
 
     def vlan_and_device_location_match(self):
-        if self.context["object"].mode["value"] == "tagged":
+        print(self.context["object"].mode)
+        if self.context["object"].mode == "tagged":
             raise ComplianceError({"mode": "tagged mode is on."})
 
     def audit(self):
