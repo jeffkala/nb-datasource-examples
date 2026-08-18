@@ -71,7 +71,7 @@ class SerialNotEmptyActiveStatus(DataComplianceRule):
 
 class VlanAssignedOneLocation(DataComplianceRule):
     model = "ipam.vlan"
-    enforced = True
+    enforce = True
 
     def vlan_must_have_one_location(self):
         raise ComplianceError(
