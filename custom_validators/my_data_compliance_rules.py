@@ -95,7 +95,7 @@ class InterfaceVlansMatchLocation(DataComplianceRule):
     enforce = True
 
     def vlan_and_device_location_match(self):
-        print(self.context["object"].untagged_vlan)
+        print(self.context["object"].untagged_vlan.all())
         print(self.context["object"].tagged_vlans.all())
 
     #         nautobot-1       | None
