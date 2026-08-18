@@ -74,17 +74,32 @@ class VlanAssignedOneLocation(DataComplianceRule):
     enforce = True
 
     def vlan_must_have_one_location(self):
-        # raise ComplianceError(
-        #     {
-        #         "name": f"VLANs is assigned to {self.context['object'].locations.count()}."
-        #     }
-        # )
-        if not self.context["object"].locations.count() > 0:
-            raise ComplianceError({"locations": "VLANs must assign a location."})
+        if not self.context["object"].locations.count() == 1:
+            raise ComplianceError(
+                {"locations": "VLANs must assign one and only one location."}
+            )
 
     def audit(self):
         messages = {}
         for fn in [self.vlan_must_have_one_location]:
+            try:
+                fn()
+            except ComplianceError as ex:
+                messages.update(ex.message_dict)
+        if messages:
+            raise ComplianceError(messages)
+
+
+class InterfaceVlansMatchLocation(DataComplianceRule):
+    model = "dcim.interface"
+    enforce = True
+
+    def vlan_and_device_location_match(self):
+        raise ComplianceError({"name": "woah"})
+
+    def audit(self):
+        messages = {}
+        for fn in [self.vlan_and_device_location_match]:
             try:
                 fn()
             except ComplianceError as ex:
