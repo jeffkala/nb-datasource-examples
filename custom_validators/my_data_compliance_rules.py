@@ -74,8 +74,13 @@ class VlanAssignedOneLocation(DataComplianceRule):
     enforced = True
 
     def vlan_must_have_one_location(self):
-        if not self.context["object"].locations.count() > 0:
-            raise ComplianceError({"locations": "VLANs must assign a location."})
+        raise ComplianceError(
+            {
+                "locations": f"VLANs is assigned to {self.context['object'].locations.count()}."
+            }
+        )
+        # if not self.context["object"].locations.count() > 0:
+        #     raise ComplianceError({"locations": "VLANs must assign a location."})
 
     def audit(self):
         messages = {}
