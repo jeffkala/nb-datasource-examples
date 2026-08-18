@@ -75,7 +75,7 @@ class VlanAssignedOneLocation(DataComplianceRule):
 
     def vlan_must_have_one_location(self):
         if (
-            not self.context["object"].locations
+            not self.context["object"].locations.all()
             and self.context["object"].locations.count() != 1
         ):
             raise ComplianceError(
