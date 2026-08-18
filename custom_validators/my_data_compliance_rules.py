@@ -51,7 +51,7 @@ class SerialNotEmptyActiveStatus(DataComplianceRule):
 
     def audit_serial_not_empty(self):
         obj = self.context["object"]
-        if not obj.serial and obj.status.name != "Active":
+        if not obj.serial and obj.status.name == "Active":
             raise ComplianceError(
                 {
                     "name": "Devices with status of Active MUST have a serial number assigned."
