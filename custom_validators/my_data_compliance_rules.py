@@ -87,8 +87,8 @@ class VlanAssignedOneLocation(DataComplianceRule):
         # self.context["object"].refresh_from_db()
         # Doesn't work based on https://github.com/nautobot/nautobot/issues/946.
         if (
-            not self.context["object"].locations
-            or self.context["object"].locations.count() != 1
+            not self.context["object"].locations.all()
+            or self.context["object"].locations.all().count() != 1
         ):
             raise ComplianceError(
                 {"locations": "VLANs must assign one and only one location."}
