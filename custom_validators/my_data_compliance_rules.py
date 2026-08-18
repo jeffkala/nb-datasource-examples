@@ -84,7 +84,8 @@ class VlanAssignedOneLocation(DataComplianceRule):
         print(self.context["object"].location_assignments)
         print(self.context["object"].location_assignments.count())
         print(f"Locations: {self.context['object'].locations}")
-        self.context["object"].save()
+        self.context["object"].refresh_from_db()
+        # Doesn't work based on https://github.com/nautobot/nautobot/issues/946.
         if (
             not self.context["object"].location_assignments
             or self.context["object"].location_assignments.count() != 1
