@@ -96,16 +96,19 @@ class InterfaceVlansMatchLocation(DataComplianceRule):
 
     def vlan_and_device_location_match(self):
         print(self.context["object"].untagged_vlan)
-        print(self.context["object"].tagged_vlans)
-        # if self.context["object"].mode:
-        #     if self.context["object"].untagged_vlan:
-        #         if not self.context["object"].untagged_vlan.location.name == self.context["object"].device.location.name:
-        #             print("in if")
+        print(self.context["object"].tagged_vlans.all())
 
-        #     # access: One untagged VLAN
-        #     # tagged: One untagged VLAN and/or one or more tagged VLANs
-        #     # tagged-all: Implies all VLANs are available (w/optional untagged VLAN)
-        #     raise ComplianceError({"mode": "tagged mode is on."})
+    #         nautobot-1       | None
+    # nautobot-1       | ipam.VLAN.None
+    # if self.context["object"].mode:
+    #     if self.context["object"].untagged_vlan:
+    #         if not self.context["object"].untagged_vlan.location.name == self.context["object"].device.location.name:
+    #             print("in if")
+
+    #     # access: One untagged VLAN
+    #     # tagged: One untagged VLAN and/or one or more tagged VLANs
+    #     # tagged-all: Implies all VLANs are available (w/optional untagged VLAN)
+    #     raise ComplianceError({"mode": "tagged mode is on."})
 
     def audit(self):
         messages = {}
