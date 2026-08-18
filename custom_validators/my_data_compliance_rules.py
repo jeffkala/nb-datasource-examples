@@ -75,20 +75,20 @@ class VlanAssignedOneLocation(DataComplianceRule):
 
     def vlan_must_have_one_location(self):
         # Odd fields on vlans 'location', 'location_assignments', 'locations'
-        print(f"Validation Object: {type(self.context['object'])}")
-        print(f"Location: {self.context['object'].location}")
-        print(f"Locations: {self.context['object'].locations.all()}")
-        print(
-            f"Location Assignments: {self.context['object'].location_assignments.all()}"
-        )
-        print(self.context["object"].location_assignments)
-        print(self.context["object"].location_assignments.count())
-        print(f"Locations: {self.context['object'].locations}")
-        self.context["object"].refresh_from_db()
+        # print(f"Validation Object: {type(self.context['object'])}")
+        # print(f"Location: {self.context['object'].location}")
+        # print(f"Locations: {self.context['object'].locations.all()}")
+        # print(
+        #     f"Location Assignments: {self.context['object'].location_assignments.all()}"
+        # )
+        # print(self.context["object"].location_assignments)
+        # print(self.context["object"].location_assignments.count())
+        # print(f"Locations: {self.context['object'].locations}")
+        # self.context["object"].refresh_from_db()
         # Doesn't work based on https://github.com/nautobot/nautobot/issues/946.
         if (
-            not self.context["object"].location_assignments
-            or self.context["object"].location_assignments.count() != 1
+            not self.context["object"].locations
+            or self.context["object"].locations.count() != 1
         ):
             raise ComplianceError(
                 {"locations": "VLANs must assign one and only one location."}
