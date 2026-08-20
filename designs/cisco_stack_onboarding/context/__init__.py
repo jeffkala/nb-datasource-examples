@@ -1,4 +1,5 @@
 """Context file for Cisco Stack Onboarding."""
+
 import logging
 from nautobot_design_builder.context import Context
 from nautobot.dcim.models import Device, Platform
@@ -15,12 +16,13 @@ InventoryPluginRegister.register("nautobot-inventory", NautobotORMInventory)
 
 LOGGER = logging.getLogger(__name__)
 
+
 def merge_switch_data(inventory_list, switch_status_list):
-    switch_status_map = {item['switch']: item for item in switch_status_list}
+    switch_status_map = {item["switch"]: item for item in switch_status_list}
     for swid in switch_status_map:
         for item in inventory_list:
             merged_item = item.copy()
-            if item['name'] == f"Switch {swid}" or item['name'] == swid:
+            if item["name"] == f"Switch {swid}" or item["name"] == swid:
                 switch_status_map[swid].update(merged_item)
     return switch_status_map
 
@@ -113,12 +115,14 @@ class CiscoStackDesignContext(Context):
 
     def get_stack_data(self):
         """Login to device and retrieve stack information."""
-        gc_obj = GoldenConfig.objects.filter(device__in=Device.objects.filter(platform__in=Platform.objects.filter(name__in=["cisco_xe", "cisco_ios"])))
+        gc_obj = GoldenConfig.objects.filter(
+            device__in=Device.objects.filter(platform__in=Platform.objects.filter(name__in=["cisco_xe", "cisco_ios"]))
+        )
         inscope_devices = []
         full_stack_data = []
         for dev in gc_obj:
             try:
-                if 'switch 1 prov' in dev.backup_config:
+                if "switch 1 prov" in dev.backup_config:
                     inscope_devices.append(dev.device.id)
             except:
                 pass
@@ -148,7 +152,9 @@ class CiscoStackDesignContext(Context):
                     )
                     try:
                         output = result[nr_host][0].result[0].result
-                        merged_data = merge_switch_data(output["output"]["show inventory"], output["output"]["show switch detail"])
+                        merged_data = merge_switch_data(
+                            output["output"]["show inventory"], output["output"]["show switch detail"]
+                        )
                         full_stack_data.append({nr_host: merged_data})
                     except:
                         pass

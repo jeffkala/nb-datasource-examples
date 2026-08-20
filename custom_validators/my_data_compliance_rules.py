@@ -30,9 +30,7 @@ class DeviceDataComplianceRules(DataComplianceRule):
     # Checks if a device name contains any special characters other than a dash (-), underscore (_), or period (.) using regex
     def audit_device_name_chars(self):
         if not re.match("^[a-zA-Z0-9._-]+$", self.context["object"].name):
-            raise ComplianceError(
-                {"name": "Device name contains unallowed special characters."}
-            )
+            raise ComplianceError({"name": "Device name contains unallowed special characters."})
 
     def audit(self):
         messages = {}
@@ -52,11 +50,7 @@ class SerialNotEmptyActiveStatus(DataComplianceRule):
     def audit_serial_not_empty(self):
         obj = self.context["object"]
         if not obj.serial and obj.status.name == "Active":
-            raise ComplianceError(
-                {
-                    "name": "Devices with status of Active MUST have a serial number assigned."
-                }
-            )
+            raise ComplianceError({"name": "Devices with status of Active MUST have a serial number assigned."})
 
     def audit(self):
         messages = {}
@@ -71,28 +65,11 @@ class SerialNotEmptyActiveStatus(DataComplianceRule):
 
 class VlanAssignedOneLocation(DataComplianceRule):
     model = "ipam.vlan"
-    enforce = False
+    enforce = False  # Enforcement True, Doesn't work based on https://github.com/nautobot/nautobot/issues/946.
 
     def vlan_must_have_one_location(self):
-        # Odd fields on vlans 'location', 'location_assignments', 'locations'
-        # print(f"Validation Object: {type(self.context['object'])}")
-        # print(f"Location: {self.context['object'].location}")
-        # print(f"Locations: {self.context['object'].locations.all()}")
-        # print(
-        #     f"Location Assignments: {self.context['object'].location_assignments.all()}"
-        # )
-        # print(self.context["object"].location_assignments)
-        # print(self.context["object"].location_assignments.count())
-        # print(f"Locations: {self.context['object'].locations}")
-        # self.context["object"].refresh_from_db()
-        # Doesn't work based on https://github.com/nautobot/nautobot/issues/946.
-        if (
-            not self.context["object"].locations.all()
-            or self.context["object"].locations.all().count() != 1
-        ):
-            raise ComplianceError(
-                {"locations": "VLANs must assign one and only one location."}
-            )
+        if not self.context["object"].locations.all() or self.context["object"].locations.all().count() != 1:
+            raise ComplianceError({"locations": "VLANs must assign one and only one location."})
 
     def audit(self):
         messages = {}
@@ -110,23 +87,18 @@ class InterfaceVlansMatchLocation(DataComplianceRule):
     enforce = True
 
     def vlan_and_device_location_match(self):
+        # Means its routed mode port.
         if not self.context["object"].mode:
             return
         device_location = self.context["object"].device.location.name
         untagged = self.context["object"].untagged_vlan  # Single vlan object
-        print(untagged)
-        print(type(untagged))
         if untagged and device_location != untagged.location.name:
-            raise ComplianceError(
-                {"untagged_vlan": "VLAN isn't the same as the devices location."}
-            )
+            raise ComplianceError({"untagged_vlan": "VLAN isn't the same as the devices location."})
         tagged = self.context["object"].tagged_vlans.all()  # vlan queryset
         if tagged:
             for vlan_location in tagged:
                 if device_location != vlan_location.location.name:
-                    raise ComplianceError(
-                        {"tagged_vlans": "VLAN isn't the same as the devices location."}
-                    )
+                    raise ComplianceError({"tagged_vlans": "VLAN isn't the same as the devices location."})
 
     def audit(self):
         messages = {}
