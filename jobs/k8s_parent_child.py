@@ -2,7 +2,7 @@ from nautobot.apps.jobs import BooleanVar, Job, StringVar, register_jobs
 from nautobot.extras.models import Job as JobModel
 from nautobot.extras.models import JobQueue, JobResult
 
-name = "Kubernetes Queue Examples"
+name = "Kubernetes Parent Child Jobs"
 
 
 class ChildJob(Job):
