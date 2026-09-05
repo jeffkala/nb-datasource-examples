@@ -26,10 +26,10 @@ sync_devices:
         post_processor: "{% for entry in obj %}{% if entry['ip'] %}{% for ipaddr in entry['ip'] %}{% if original_host in ipaddr %}{{ entry['name'] | first }}{% endif %}{% endfor %}{% endif %}{% endfor %}"
   mask_length:
     commands:
-      - command: "show configuration interfaces | display inheritance no-comments | display json"
+      - command: "show configuration interfaces | display json"
         parser: "none"
-        jpath: "configuration[].interfaces[].interface[].unit[?family[].inet[].address[?contains(name.data, `{{ obj }}`)]][].family[].inet[].address[].name.data"
-        post_processor: "{{ obj[1].split('/')[1] }}"
+        jpath: "configuration.interfaces.interface[].unit[?family.inet.address[?contains(name, `{{ obj }}`)]][].family.*.address[][].name"
+        post_processor: "{{ obj[0].split('/')[1] }}"
         iterable_type: "int"
 sync_network_data:
   serial:
@@ -41,7 +41,7 @@ sync_network_data:
   interfaces:
     root_key: true
     commands:
-      - command: "show configuration interfaces | display inheritance no-comments | display json"
+      - command: "show configuration interfaces | display json"
         parser: "none"
         # when root_key=true this extracted value is what becomes interable in keys using __ under `current_key`.
         jpath: 'configuration.interfaces.interface[].{name: name, units:unit[].name}'   # yamllint disable-line rule:quoted-strings
@@ -75,14 +75,14 @@ sync_network_data:
     commands:
       - command: "show interfaces | display json"
         parser: "none"
-        jpath: '"interface-information"[]."physical-interface"[].["logical-interface"[?name[?data==`{{ current_key }}`]]][][]."description"[].data || "interface-information"[]["physical-interface"[?name[?data==`{{ current_key }}`]]][][]."description"[].data'  # yamllint disable-line rule:quoted-strings
+        jpath: '"interface-information"[]["physical-interface"[?name[?data==`{{ current_key }}`]]][][]."description"[].data'  # yamllint disable-line rule:quoted-strings
         iterable_type: "str"
   interfaces__link_status:
     commands:
       - command: "show interfaces | display json"
         parser: "none"
         jpath: '"interface-information"[]["physical-interface"[?name[?data==`{{ current_key.split(".")[0] }}`]]][][]."admin-status"[].data'  # yamllint disable-line rule:quoted-strings
-        post_processor: "{% if obj | length > 0 %}{{ obj[0] | interface_status_to_bool }}{% else %}{{ obj }}{% endif %}"
+        post_processor: "{% if obj | length > 0 %}{{ obj[0] | interface_status_to_bool }}{% else %}{{ 'False' }}{% endif %}"
   interfaces__802.1Q_mode:
     commands:
       - command: "show interfaces | display json"
@@ -114,7 +114,6 @@ sync_network_data:
         parser: "textfsm"
         jpath: "[?contains(interfaces, `{{ current_key }}`*)].{admin_mode: admin_mode, mode: mode, access_vlan: access_vlan, trunking_vlans: trunking_vlans, native_vlan: native_vlan}"
         post_processor: "{{ obj | get_vlan_data(vlan_map, 'untagged') | tojson }}"
-        iterable_type: "dict"
   cables:
     commands:
       - command: "show lldp neighbors | display json"
@@ -122,3 +121,8 @@ sync_network_data:
         jpath: '"lldp-neighbors-information"[]."lldp-neighbor-information"[].{local_interface: "lldp-local-port-id"[0].data, remote_interface: "lldp-remote-port-id"[0].data, remote_device: "lldp-remote-system-name"[0].data}'  # yamllint disable-line rule:quoted-strings
         post_processor: "{% set result = [] %}{% for cable in obj %}{% set _=result.append({'local_interface': cable['local_interface'], 'remote_interface': cable['remote_interface'], 'remote_device': cable['remote_device'] | remove_fqdn }) %}{% endfor %}{{ result | tojson }}"
         iterable_type: "dict"
+  software_version:
+    commands:
+      - command: "show system information | display json"
+        parser: "none"
+        jpath: '"system-information"[]."os-version"[].data'  # yamllint disable-line rule:quoted-strings

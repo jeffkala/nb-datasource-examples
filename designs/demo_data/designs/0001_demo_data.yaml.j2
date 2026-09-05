@@ -1,0 +1,307 @@
+---
+manufacturers:
+  - "!create_or_update:name": "Juniper"
+    description: "Juniper Networks"
+    "!ref": "manufacturer_juniper"
+  - "!create_or_update:name": "Adva"
+    description: "Adva Networks"
+    "!ref": "manufacturer_adva"
+platforms:
+  - "!create_or_update:name": "Juniper Junos"
+    description: "Juniper JunOS"
+    napalm_driver: "junos"
+    "network_driver": "juniper_junos"
+    "manufacturer": "!ref:manufacturer_juniper"
+    "!ref": "platform_juniper_junos"
+  - "!create_or_update:name": "Adva Networking"
+    description: "Adva Networking"
+    manufacturer: "!ref:manufacturer_adva"
+    napalm_driver: "adva"
+    "!ref": "platform_adva"
+device_families:
+  - "!create_or_update:name": "Juniper MX"
+    "!ref": "device_family_juniper_mx"
+  - "!create_or_update:name": "Juniper QFX"
+    "!ref": "device_family_juniper_qfx"
+  - "!create_or_update:name": "Adva FSP"
+    "!ref": "device_family_adva_fsp"
+location_types:
+  - "!create_or_update:name": "Region"
+    "description": "Region / Continent"
+    content_types:
+      - { "!get:model": "controller" }
+    "!ref": "super_region_loc_type"
+    children:
+      - "!create_or_update:name": "Sub Region"
+        description: "Sub Regions"
+        "!ref": "region_loc_type"
+        children:
+          - "!create_or_update:name": "Data Center"
+            description: "DC (Data Center)"
+            content_types:
+              - { "!get:model": "device" }
+              - { "!get:model": "rack" }
+              - { "!get:model": "prefix" }
+              - { "!get:model": "vlan" }
+              - { "!get:model": "vlangroup" }
+              - { "!get:model": "circuittermination" }
+              - { "!get:model": "controller" }
+              - { "!get:model": "powerpanel" }
+            "!ref": "dc_loc_type"
+          - "!create_or_update:name": "Site"
+            description: "Site"
+            content_types:
+              - { "!get:model": "device" }
+              - { "!get:model": "rack" }
+              - { "!get:model": "prefix" }
+              - { "!get:model": "vlan" }
+              - { "!get:model": "vlangroup" }
+              - { "!get:model": "circuittermination" }
+              - { "!get:model": "powerpanel" }
+            "!ref": "site_loc_type"
+            children:
+              - "!create_or_update:name": "Building"
+                description: "Buildings in site"
+                content_types:
+                  - { "!get:model": "device" }
+                  - { "!get:model": "rack" }
+                  - { "!get:model": "prefix" }
+                  - { "!get:model": "vlan" }
+                  - { "!get:model": "vlangroup" }
+                  - { "!get:model": "circuittermination" }
+                  - { "!get:model": "powerpanel" }
+                children:
+                  - "!create_or_update:name": "Floor"
+                    description: "Floors in site buildings"
+                    content_types:
+                      - { "!get:model": "device" }
+                      - { "!get:model": "rack" }
+                      - { "!get:model": "prefix" }
+                      - { "!get:model": "vlan" }
+                      - { "!get:model": "vlangroup" }
+                      - { "!get:model": "circuittermination" }
+                      - { "!get:model": "powerpanel" }
+          - "!create_or_update:name": "HUB"
+            description: "acme HUB"
+            content_types:
+              - { "!get:model": "device" }
+              - { "!get:model": "rack" }
+              - { "!get:model": "prefix" }
+              - { "!get:model": "vlan" }
+              - { "!get:model": "vlangroup" }
+              - { "!get:model": "circuittermination" }
+              - { "!get:model": "powerpanel" }
+
+locations:
+# REGION/
+  - "!create_or_update:name": "North America"
+    location_type: "!ref:super_region_loc_type"
+    status__name: "Active"
+    "!ref": "north_america_loc"
+# COUNTRY/
+  - "!create_or_update:name": "United States"
+    location_type: "!ref:region_loc_type"
+    parent__name: "!ref:north_america_loc"
+    status__name: "Active"
+    "!ref": "usa_loc"
+
+roles:
+  - "!create_or_update:name": "hub-router"
+    description: "Hub Router"
+    color: "673ab7"
+    content_types:
+      - { "!get:model": "device" }
+    "!ref": "hub_router_devicerole"
+
+  - "!create_or_update:name": "customer-cpe"
+    description: "Customer Premises Equipment (CPE)"
+    color: "673ab7"
+    content_types:
+      - { "!get:model": "device" }
+    "!ref": "cpe_devicerole"
+
+  - "!create_or_update:name": "hub-switch"
+    description: "Hub Switch"
+    color: "9d70ec"
+    content_types:
+      - { "!get:model": "device" }
+    "!ref": "hub_switch_devicerole"
+
+module_types:
+  - "!create_or_update:model": "RE-S-2000-4096"
+    manufacturer: "!ref:manufacturer_juniper"
+    part_number: RE-S-2000-4096
+    console_port_templates:
+      - name: Console-{module}
+        type: rj-45
+      - name: AUX-{module}
+        type: rj-45
+    interface_templates:
+      - name: fxp0-{module}
+        type: 1000base-t
+        mgmt_only: true
+    "!ref": "re_s_2000_4096_moduletype"
+  - "!create_or_update:model": MIC-3D-16XGE-SFPP
+    manufacturer: "!ref:manufacturer_juniper"
+    part_number: 750-028467
+    interface_templates:
+      - name: xe-{module}/0/0
+        type: 10gbase-x-sfpp
+      - name: xe-{module}/0/1
+        type: 10gbase-x-sfpp
+      - name: xe-{module}/0/2
+        type: 10gbase-x-sfpp
+      - name: xe-{module}/0/3
+        type: 10gbase-x-sfpp
+      - name: xe-{module}/1/0
+        type: 10gbase-x-sfpp
+      - name: xe-{module}/1/1
+        type: 10gbase-x-sfpp
+      - name: xe-{module}/1/2
+        type: 10gbase-x-sfpp
+      - name: xe-{module}/1/3
+        type: 10gbase-x-sfpp
+      - name: xe-{module}/2/0
+        type: 10gbase-x-sfpp
+      - name: xe-{module}/2/1
+        type: 10gbase-x-sfpp
+      - name: xe-{module}/2/2
+        type: 10gbase-x-sfpp
+      - name: xe-{module}/2/3
+        type: 10gbase-x-sfpp
+      - name: xe-{module}/3/0
+        type: 10gbase-x-sfpp
+      - name: xe-{module}/3/1
+        type: 10gbase-x-sfpp
+      - name: xe-{module}/3/2
+        type: 10gbase-x-sfpp
+      - name: xe-{module}/3/3
+        type: 10gbase-x-sfpp
+
+# Device Types
+device_types:
+  - "manufacturer": "!ref:manufacturer_juniper"
+    "!create_or_update:model": "MX 960"
+    u_height: 7
+    is_full_depth: true
+    "device_family": "!ref:device_family_juniper_mx"
+    module_bay_templates:
+      - name: PEM0
+        label: PSU 0
+        position: PSU0
+      - name: PEM1
+        label: PSU 1
+        position: PSU1
+      - name: PEM2
+        label: PSU 2
+        position: PSU2
+      - name: PEM3
+        label: PSU 3
+        position: PSU3
+      - name: FPC 0
+        position: '0'
+      - name: FPC 1
+        position: '1'
+      - name: FPC 2
+        position: '2'
+      - name: FPC 3
+        position: '3'
+      - name: FPC 4
+        position: '4'
+      - name: FPC 5
+        position: '5'
+      - name: CB0
+        label: Routing Engine 0
+        position: re0
+      - name: CB1
+        label: Routing Engine 1
+        position: re1
+      - name: CB2
+        label: Routing Engine 2
+        position: re2
+      - name: FPC 6
+        position: '6'
+      - name: FPC 7
+        position: '7'
+      - name: FPC 8
+        position: '8'
+      - name: FPC 9
+        position: '9'
+      - name: FPC 10
+        position: '10'
+      - name: FPC 11
+        position: '11'
+  - "manufacturer": "!ref:manufacturer_juniper"
+    "!create_or_update:model": "QFX5100-96S"
+    u_height: 1
+    is_full_depth: true
+    "device_family": "!ref:device_family_juniper_qfx"
+    interface_templates:
+    - "!create_or_update:name": "mgmt-0-0"
+      label: "MGMT"
+      type: 1000base-t
+      mgmt_only: true
+    {% for port in range(110) %}
+    - "!create_or_update:name": "et-1/0/{{ port }}"
+      label: "1/0/{{ port }}"
+      type: 1000base-t
+    {% endfor %}
+    "!ref": "qfx5100_devicetype"
+  - "manufacturer": "!ref:manufacturer_adva"
+    "!create_or_update:model": "FSP 150-xg108"
+    u_height: 1
+    is_full_depth: true
+    "device_family": "!ref:device_family_adva_fsp"
+    interface_templates:
+    - "!create_or_update:name": "mgmt-0-0"
+      label: "MGMT"
+      type: 1000base-t
+      mgmt_only: true
+    {% for port in range(1,10) %}
+    - "!create_or_update:name": "port-{{ port }}"
+      label: "1/{{ port }}"
+      type: 1000base-t
+    {% endfor %}
+    "!ref": "adva_fsp150_devicetype"
+
+providers:
+  - "!create_or_update:name": "Acme Communications"
+    asn: 20115
+    "!ref": "provider_acme"
+
+circuit_types:
+  - "!create_or_update:name": "Transport Ethernet"
+    description: "Transport Ethernet"
+    "!ref": "circuit_type_transport"
+  - "!create_or_update:name": "Path"
+    description: "Path"
+    "!ref": "circuit_type_path"
+
+statuses:
+  - "!create_or_update:name": "Available"
+    content_types:
+      - { "!get:model": "ipam.vlan" }
+    "!ref": "status_available"
+vlan_groups:
+  - "!create_or_update:name": "acme VLANs"
+    range: 2-999
+    "!ref": "acme_vlan_group"
+  - "!create_or_update:name": "Service VLANs (S-VLAN)"
+    range: 1000-1999
+    "!ref": "service_vlan_group"
+
+vlans:
+  {% for vid in range(2, 999) %}
+  - "!create_or_update:vid": "{{ vid }}"
+    name: "Available {{ vid }}"
+    vlan_group: "!ref:acme_vlan_group"
+    status__name: "Available"
+    "!ref": "acme_vlan_{{ vid }}"
+  {% endfor %}
+  {% for vid in range(1000, 1999) %}
+  - "!create_or_update:vid": "{{ vid }}"
+    name: "VLAN {{ vid }}"
+    vlan_group: "!ref:service_vlan_group"
+    "!ref": "service_vlan_{{ vid }}"
+    status__name: "Available"
+  {% endfor %}

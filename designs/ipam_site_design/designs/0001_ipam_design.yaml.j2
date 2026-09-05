@@ -2,7 +2,7 @@
 prefixes:
   - "!next_prefix":
       locations__name__in:
-        - "{{ site_name.parent }}"
+        - "{{ site_name }}"
       type: "container"
       length: {{ ipam_templates[site_size | lower]['template_prefix_size'] | int }}
       vrfs__isnull: true
@@ -27,7 +27,7 @@ prefixes:
   {% for lan_subnet in range(0, lan_segments) %}
   - "!next_prefix":
       locations__name__in:
-        - "{{ site_name.parent }}"
+        - "{{ site_name }}"
       type: "container"
       length: 24
     status__name: "Active"

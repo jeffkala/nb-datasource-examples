@@ -1,6 +1,6 @@
 """Example to reuse nornir elements to run commands."""
 
-from nautobot.apps.jobs import BooleanVar, Job, MultiObjectVar
+from nautobot.apps.jobs import BooleanVar, Job, MultiObjectVar, register_jobs
 from nautobot.dcim.models import Device
 from nautobot_plugin_nornir.constants import NORNIR_SETTINGS
 from nautobot_plugin_nornir.plugins.inventory.nautobot_orm import NautobotORMInventory
@@ -52,6 +52,10 @@ class CommandExecution(Job):
                         command="show version",
                         use_textfsm=True,
                     )
-                    self.logger.info(result)
+                    self.logger.info(result[nr_host][0].result[0].result)
         except NornirNautobotException as err:
             self.logger.error(err)
+
+jobs = [CommandExecution]
+
+register_jobs(*jobs)
