@@ -1,0 +1,68 @@
+---
+- platform_name: "hp_procurve"
+  remediation_type: "hierconfig"
+  remediation_options:
+    style: "procurve"
+    negation_prefix: 'no '
+    declaration_prefix: ''
+    indentation: 2
+    rules:
+      idempotent_commands:
+      - match_rules:
+        - startswith: aaa authentication port-access eap-radius
+      - match_rules:
+        - startswith: 'aaa accounting update periodic '
+      - match_rules:
+        - startswith: 'interface '
+        - startswith: 'untagged vlan '
+      - match_rules:
+        - startswith: 'interface '
+        - startswith: 'name '
+      negate_with:
+      - match_rules:
+        - startswith: 'interface '
+        - equals: disable
+        use: enable
+      - match_rules:
+        - startswith: 'interface '
+        - startswith: 'name '
+        use: no name
+      ordering:
+      - match_rules:
+        - re_search: ^no aaa port-access \S+ auth-priority
+        weight: -10
+      - match_rules:
+        - re_search: ^no aaa port-access authenticator \S+$
+        weight: -10
+      - match_rules:
+        - re_search: '^aaa server-group radius \S+ host '
+        weight: 10
+      - match_rules:
+        - startswith: 'interface '
+        - startswith:
+          - 'no tagged vlan '
+          - 'no untagged vlan '
+        weight: 10
+      - match_rules:
+        - startswith: 'no tacacs-server '
+        weight: 10
+      - match_rules:
+        - re_search: ^no radius-server host \S+ dyn-authorization$
+        weight: 15
+      - match_rules:
+        - re_search: '^no aaa server-group radius \S+ host '
+        weight: 20
+      - match_rules:
+        - re_search: ^no radius-server host \S+$
+        weight: 30
+      per_line_sub:
+      - search: ^\s*[#!].*
+        replace: ''
+      - search: ^; .*
+        replace: ''
+      - search: ^Running configuration:*
+        replace: ''
+      post_load_callbacks:
+      - _fixup_hp_procurve_aaa_port_access_fixup
+      - _fixup_hp_procurve_device_profile
+      - _fixup_hp_procurve_vlan

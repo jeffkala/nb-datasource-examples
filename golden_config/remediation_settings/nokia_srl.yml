@@ -1,0 +1,9 @@
+---
+- platform_name: "nokia_srl"
+  remediation_type: "hierconfig"
+  remediation_options:
+    style: "srl"
+    negation_prefix: 'delete '
+    declaration_prefix: 'set '
+    indentation: 2
+    rules: {}
