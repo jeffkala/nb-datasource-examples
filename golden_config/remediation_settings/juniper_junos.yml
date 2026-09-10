@@ -1,0 +1,9 @@
+---
+- platform_name: "juniper_junos"
+  remediation_type: "hierconfig"
+  remediation_options:
+    style: "junos"
+    negation_prefix: 'delete '
+    declaration_prefix: 'set '
+    indentation: 2
+    rules: {}

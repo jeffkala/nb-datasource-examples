@@ -1,0 +1,9 @@
+---
+- platform_name: "vyos"
+  remediation_type: "hierconfig"
+  remediation_options:
+    style: "vyos"
+    negation_prefix: 'delete '
+    declaration_prefix: 'set '
+    indentation: 2
+    rules: {}
