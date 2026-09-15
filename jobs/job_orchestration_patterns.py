@@ -7,7 +7,7 @@ from celery import chord, shared_task
 from celery.exceptions import SoftTimeLimitExceeded
 from django.core.cache import cache
 from django.db import close_old_connections, transaction
-from nautobot.apps.jobs import BooleanVar, IntegerVar, Job, MultiChoiceVar, ObjectVar, StringVar, register_jobs
+from nautobot.apps.jobs import BooleanVar, IntegerVar, Job, ObjectVar, StringVar, register_jobs
 from nautobot.dcim.models import Device
 from nautobot.extras.models import Job as JobModel
 from nautobot.extras.models import JobResult
@@ -24,6 +24,8 @@ CHECKPOINT_DONE_PREFIX = "checkpoint-done: "
 def process_item(item_name):
     """Example parallel task."""
     time.sleep(2)
+    item_name.description = "updated from chord."
+    item_name.validated_save()
     return {
         "item": item_name,
         "status": "success",
@@ -54,25 +56,26 @@ class LaunchChordJob(Job):
         default="example-batch",
     )
 
-    items = MultiChoiceVar(
-        choices=(
-            ("device-a", "device-a"),
-            ("device-b", "device-b"),
-            ("device-c", "device-c"),
-            ("device-d", "device-d"),
-        ),
-        description="Select one or more items to process in parallel.",
-    )
+    # items = MultiChoiceVar(
+    #     choices=(
+    #         ("device-a", "device-a"),
+    #         ("device-b", "device-b"),
+    #         ("device-c", "device-c"),
+    #         ("device-d", "device-d"),
+    #     ),
+    #     description="Select one or more items to process in parallel.",
+    # )
 
     class Meta:
         name = "Launch Celery Chord"
         description = "Example Nautobot Job using a Celery chord safely"
 
-    def run(self, *, batch_name, items):
-        if not items:
-            raise ValueError("You must select at least one item.")
-
-        self.logger.info("Launching chord for %s items", len(items))
+    # def run(self, *, batch_name, items):
+    def run(self, *, batch_name):
+        # if not items:
+        #     raise ValueError("You must select at least one item.")
+        items = Device.objects.all()
+        self.logger.info("Launching chord for %s items", items.count())
 
         header = [process_item.s(item_name) for item_name in items]
         callback = aggregate_results.s(
