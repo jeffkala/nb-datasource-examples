@@ -24,7 +24,7 @@ CHECKPOINT_DONE_PREFIX = "checkpoint-done: "
 def process_item(item_name):
     """Example parallel task."""
     time.sleep(2)
-    item_name.description = "updated from chord."
+    item_name.serial_number = "updated from chord."
     item_name.validated_save()
     return {
         "item": item_name,
