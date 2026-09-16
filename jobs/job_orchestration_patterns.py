@@ -8,7 +8,8 @@ from celery.exceptions import SoftTimeLimitExceeded
 from django.core.cache import cache
 from django.db import close_old_connections, transaction
 from nautobot.apps.jobs import BooleanVar, IntegerVar, Job, ObjectVar, StringVar, register_jobs
-from nautobot.core.celery import nautobot_task
+
+# from nautobot.core.celery import nautobot_task
 from nautobot.dcim.models import Device
 from nautobot.extras.models import Job as JobModel
 from nautobot.extras.models import JobResult
@@ -21,7 +22,7 @@ name = "Job Orchestration Patterns"
 CHECKPOINT_DONE_PREFIX = "checkpoint-done: "
 
 
-@nautobot_task
+@shared_task
 def process_item(item_name):
     """Example parallel task."""
     item_name.serial = "updated from chord"
