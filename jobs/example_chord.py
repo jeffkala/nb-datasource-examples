@@ -10,14 +10,15 @@ name = "Celery Chord Example"
 
 
 @nautobot_task
-def process_item(item_name):
+def process_item(device_name):
     """Example parallel task."""
+    item_name = Device.objects.get(name=device_name)
     item_name.serial = "updated from chord"
     item_name.validated_save()
     return {
-        "item": item_name,
+        "item": device_name,
         "status": "success",
-        "details": f"Processed {item_name}",
+        "details": f"Processed {device_name}",
     }
 
 
@@ -58,7 +59,7 @@ class LaunchChordJob(Job):
         # elapsed = time.perf_counter() - start
         # self.logger.info(f"{elapsed:.4f} seconds")
         start = time.perf_counter()
-        header = [process_item.s(item_name) for item_name in items]
+        header = [process_item.s(item_name.name) for item_name in items]
         callback = aggregate_results.s(
             str(self.job_result.id),
             self.user.username,
