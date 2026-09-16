@@ -1,13 +1,14 @@
 """Jobs Demonstrating Orchestration Patterns."""
 
 import time
-from concurrent.futures import ThreadPoolExecutor, as_completed
+from concurrent.futures import ThreadPoolExecutor
 
 from celery import chord, shared_task
 from celery.exceptions import SoftTimeLimitExceeded
 from django.core.cache import cache
 from django.db import close_old_connections, transaction
 from nautobot.apps.jobs import BooleanVar, IntegerVar, Job, ObjectVar, StringVar, register_jobs
+from nautobot.core.celery import nautobot_task
 from nautobot.dcim.models import Device
 from nautobot.extras.models import Job as JobModel
 from nautobot.extras.models import JobResult
@@ -20,11 +21,10 @@ name = "Job Orchestration Patterns"
 CHECKPOINT_DONE_PREFIX = "checkpoint-done: "
 
 
-@shared_task
+@nautobot_task
 def process_item(item_name):
     """Example parallel task."""
-    time.sleep(2)
-    item_name.serial_number = "updated from chord."
+    item_name.serial = "updated from chord"
     item_name.validated_save()
     return {
         "item": item_name,
@@ -76,16 +76,22 @@ class LaunchChordJob(Job):
         #     raise ValueError("You must select at least one item.")
         items = Device.objects.all()
         self.logger.info("Launching chord for %s items", items.count())
-
+        # start = time.perf_counter()
+        # for item_name in items:
+        #     item_name.serial = "pre sn"
+        #     item_name.validated_save()
+        # elapsed = time.perf_counter() - start
+        # self.logger.info(f"{elapsed:.4f} seconds")
+        start = time.perf_counter()
         header = [process_item.s(item_name) for item_name in items]
         callback = aggregate_results.s(
             str(self.job_result.id),
             self.user.username,
             batch_name,
         )
-
         async_result = chord(header)(callback)
-
+        elapsed = time.perf_counter() - start
+        self.logger.info(f"{elapsed:.4f} seconds")
         self.logger.info(
             "Submitted chord for JobResult %s with callback task id %s",
             self.job_result.id,
@@ -125,7 +131,6 @@ class HelloLatencyJob(Job):
 
         name = "Hello (latency-sensitive)"
         description = "Fast demonstration Job for the latency-sensitive class."
-        task_queues = ["celery-latency", "celery-standard"]
         soft_time_limit = 10
         time_limit = 20
         has_sensitive_variables = False
@@ -153,7 +158,6 @@ class LongRunningReportJob(Job):
 
         name = "Long-running report (checkpointed)"
         description = "Phase-based long Job that checkpoints progress and handles the soft time limit."
-        task_queues = ["celery-standard", "k8s-longrun"]
         soft_time_limit = 60
         time_limit = 120
         has_sensitive_variables = False
@@ -189,7 +193,6 @@ class SingletonMaintenanceJob(Job):
 
         name = "Singleton maintenance"
         description = "Demonstrates whole-Job mutual exclusion with is_singleton."
-        task_queues = ["celery-standard"]
         is_singleton = True
         soft_time_limit = 60
         time_limit = 120
@@ -230,18 +233,17 @@ class InJobParallelFanOutJob(Job):
 
         name = "Fan-out: in-Job parallelism (recommended)"
         description = "Processes the target set with a bounded thread pool inside one Job."
-        task_queues = ["celery-fanout", "k8s-highmem"]
         soft_time_limit = 600
         time_limit = 660
         has_sensitive_variables = False
 
     @staticmethod
-    def _process_one(pk):
+    def _process_one(record):
         """Process one item. Returns True on success. Runs in a worker thread."""
         try:
-            record = Device.objects.get(pk=pk)
+            # record = Device.objects.get(pk=pk)
             # Stand-in for real per-item work (e.g. a device call).
-            record.description = f"{record.name} processed"
+            record.serial = "in job fanout"
             record.validated_save()
             return True
         except Exception:  # pylint: disable=broad-except
@@ -253,33 +255,38 @@ class InJobParallelFanOutJob(Job):
     def run(self, max_workers, failure_threshold_percent):  # pylint: disable=arguments-differ
         """Resolve the target set once, then process it concurrently."""
         # Resolve the target set once, pass only primary keys to the workers.
-        pks = list(Device.objects.values_list("pk", flat=True))
-        if not pks:
-            self.logger.warning("No example records exist. Run 'Populate example models' first.")
-            return {"total": 0, "succeeded": 0, "failed": 0}
+        # pks = list(Device.objects.values_list("pk", flat=True))
+        devices = Device.objects.all()
+        # if not pks:
+        #     self.logger.warning("No example records exist. Run 'Populate example models' first.")
+        #     return {"total": 0, "succeeded": 0, "failed": 0}
 
-        succeeded = 0
-        failed = 0
+        # succeeded = 0
+        # failed = 0
+        start = time.perf_counter()
         with ThreadPoolExecutor(max_workers=max_workers) as pool:
-            futures = {pool.submit(self._process_one, pk): pk for pk in pks}
-            for future in as_completed(futures):
-                if future.result():
-                    succeeded += 1
-                else:
-                    failed += 1
+            futures = {pool.submit(self._process_one, pk): pk for pk in devices}
+        elapsed = time.perf_counter() - start
+        self.logger.info(f"{elapsed:.4f} seconds")
+        # for future in as_completed(futures):
+        #     if future.result():
 
-        total = len(pks)
-        failure_rate = (failed / total) * 100
-        # Consolidated outcome with counts.
-        self.logger.info("Fan-out complete. total=%d succeeded=%d failed=%d", total, succeeded, failed)
-        if failure_rate > failure_threshold_percent:
-            # Threshold partial-failure mode..
-            self.logger.error(
-                "Failure rate %.1f%% exceeds the %d%% threshold. Treat as a systemic failure.",
-                failure_rate,
-                failure_threshold_percent,
-            )
-        return {"total": total, "succeeded": succeeded, "failed": failed}
+        #         succeeded += 1
+        #     else:
+        #         failed += 1
+
+        # total = len(pks)
+        # failure_rate = (failed / total) * 100
+        # # Consolidated outcome with counts.
+        # self.logger.info("Fan-out complete. total=%d succeeded=%d failed=%d", total, succeeded, failed)
+        # if failure_rate > failure_threshold_percent:
+        #     # Threshold partial-failure mode..
+        #     self.logger.error(
+        #         "Failure rate %.1f%% exceeds the %d%% threshold. Treat as a systemic failure.",
+        #         failure_rate,
+        #         failure_threshold_percent,
+        #     )
+        # return {"total": total, "succeeded": succeeded, "failed": failed}
 
 
 class FanOutChildJob(Job):
