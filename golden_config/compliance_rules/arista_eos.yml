@@ -4,6 +4,8 @@
   config_ordered: false
   match_config: "hostname"
   config_type: "cli"
+  tags:
+    - name: "gc.cr.rule"
 - feature_slug: "ntp"
   platform_network_driver: "arista_eos"
   config_ordered: false
